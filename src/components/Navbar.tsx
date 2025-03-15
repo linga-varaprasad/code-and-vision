@@ -47,8 +47,8 @@ const Navbar = () => {
             onClick={() => setIsMenuOpen(false)}
           >
             <img 
-              src="/lovable-uploads/60490dd5-b959-44ff-88f8-ddf57e9e2373.png" 
-              alt="Logo" 
+              src="/lovable-uploads/377236f1-6ac8-4570-9f6b-c33669cdf2f1.png" 
+              alt="Colorful Bird Logo" 
               className="h-10 w-auto logo-animation animate-float" 
             />
             <span className="font-jacques text-xl sm:text-2xl tracking-wider">Prasad</span>

@@ -55,27 +55,14 @@
 
   body {
     @apply bg-transparent text-foreground font-kalam relative min-h-screen;
-    background-image: url('/lovable-uploads/a2c9355d-4756-440e-9d4a-792de689bc20.png');
+    background: url('/lovable-uploads/a2c9355d-4756-440e-9d4a-792de689bc20.png') no-repeat center center fixed;
     background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
     overflow-x: hidden;
   }
 
-  /* Add a pseudo-element to ensure the background covers the entire viewport */
+  /* Remove the pseudo-element that might be causing issues */
   body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    background-image: url('/lovable-uploads/a2c9355d-4756-440e-9d4a-792de689bc20.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    content: none;
   }
 
   /* Hide scrollbar but keep functionality */
