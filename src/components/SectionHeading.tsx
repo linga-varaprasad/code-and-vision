@@ -22,9 +22,9 @@ const SectionHeading = ({
 
   return (
     <div className={`mb-12 ${alignmentClasses[align]}`}>
-      <h2 className="heading-secondary mb-2 animate-fade-in">{title}</h2>
+      <h2 className="heading-secondary mb-2 animate-fade-in text-shadow-md">{title}</h2>
       {subtitle && (
-        <p className="text-lg opacity-80 max-w-2xl mx-auto animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+        <p className="text-lg opacity-90 max-w-2xl mx-auto animate-fade-in-up text-shadow-sm" style={{animationDelay: '0.2s'}}>
           {subtitle}
         </p>
       )}

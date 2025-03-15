@@ -13,7 +13,7 @@ const AchievementCard = ({ achievement, delay = 0 }: AchievementCardProps) => {
       style={{ animationDelay: `${delay * 0.1}s` }}
     >
       <Trophy size={20} className="mr-3 text-accent flex-shrink-0 mt-0.5" />
-      <p>{achievement}</p>
+      <p className="text-shadow-sm">{achievement}</p>
     </div>
   );
 };
