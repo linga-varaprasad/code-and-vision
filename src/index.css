@@ -55,10 +55,12 @@
 
   body {
     @apply text-foreground font-kalam relative min-h-screen;
-    background: url('/lovable-uploads/14961972-44dc-4cbd-9225-71d635f3ee66.png') no-repeat center center fixed;
+    background-image: url('/lovable-uploads/ba2f9baa-a550-41f4-baba-80e4dffd461e.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
     background-size: cover;
     overflow-x: hidden;
-    /* Remove any background color that might be overriding the image */
     background-color: transparent !important;
   }
 
