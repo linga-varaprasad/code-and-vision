@@ -54,15 +54,12 @@
   }
 
   body {
-    @apply bg-transparent text-foreground font-kalam relative min-h-screen;
+    @apply text-foreground font-kalam relative min-h-screen;
     background: url('/lovable-uploads/a2c9355d-4756-440e-9d4a-792de689bc20.png') no-repeat center center fixed;
     background-size: cover;
     overflow-x: hidden;
-  }
-
-  /* Remove the pseudo-element that might be causing issues */
-  body::before {
-    content: none;
+    /* Remove any background color that might be overriding the image */
+    background-color: transparent !important;
   }
 
   /* Hide scrollbar but keep functionality */
