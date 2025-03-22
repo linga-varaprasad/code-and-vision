@@ -21,6 +21,14 @@ interface ProgramProps {
   bind: () => void;
 }
 
+interface WebGLExtensions {
+  formatRGBA: { internalFormat: number; format: number } | null;
+  formatRG: { internalFormat: number; format: number } | null;
+  formatR: { internalFormat: number; format: number } | null;
+  halfFloatTexType: number;
+  supportLinearFiltering: boolean;
+}
+
 function SplashCursor({
   // Add whatever props you like for customization
   SIM_RESOLUTION = 128,
@@ -84,6 +92,10 @@ function SplashCursor({
       config.SHADING = false;
     }
 
+    function isWebGL2(context: WebGLRenderingContext | WebGL2RenderingContext): context is WebGL2RenderingContext {
+      return 'bindBufferBase' in context;
+    }
+
     function getWebGLContext(canvas: HTMLCanvasElement) {
       const params = {
         alpha: true,
@@ -92,68 +104,87 @@ function SplashCursor({
         antialias: false,
         preserveDrawingBuffer: false,
       };
-      let gl = canvas.getContext("webgl2", params) as WebGL2RenderingContext;
-      const isWebGL2 = !!gl;
-      if (!isWebGL2)
-        gl =
-          (canvas.getContext("webgl", params) ||
-          canvas.getContext("experimental-webgl", params)) as WebGLRenderingContext;
-      let halfFloat;
-      let supportLinearFiltering;
-      if (isWebGL2) {
+      
+      let gl = canvas.getContext("webgl2", params) as WebGL2RenderingContext | null;
+      const isWebGL2Support = !!gl;
+      
+      if (!isWebGL2Support) {
+        gl = (canvas.getContext("webgl", params) ||
+              canvas.getContext("experimental-webgl", params)) as WebGLRenderingContext;
+      }
+
+      let halfFloat: any;
+      let supportLinearFiltering: any;
+      
+      if (isWebGL2Support && gl) {
         gl.getExtension("EXT_color_buffer_float");
         supportLinearFiltering = gl.getExtension("OES_texture_float_linear");
-      } else {
+      } else if (gl) {
         halfFloat = gl.getExtension("OES_texture_half_float");
-        supportLinearFiltering = gl.getExtension(
-          "OES_texture_half_float_linear"
-        );
+        supportLinearFiltering = gl.getExtension("OES_texture_half_float_linear");
       }
-      gl.clearColor(0.0, 0.0, 0.0, 1.0);
-      const halfFloatTexType = isWebGL2
-        ? gl.HALF_FLOAT
-        : halfFloat && halfFloat.HALF_FLOAT_OES;
+      
+      if (gl) {
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      }
+      
+      const halfFloatTexType = isWebGL2Support && gl
+        ? (gl as WebGL2RenderingContext).HALF_FLOAT
+        : halfFloat ? halfFloat.HALF_FLOAT_OES : null;
+        
       let formatRGBA;
       let formatRG;
       let formatR;
 
-      if (isWebGL2) {
+      if (isWebGL2Support && gl) {
+        const webGL2Context = gl as WebGL2RenderingContext;
         formatRGBA = getSupportedFormat(
           gl,
-          gl.RGBA16F,
+          webGL2Context.RGBA16F,
           gl.RGBA,
           halfFloatTexType
         );
-        formatRG = getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType);
-        formatR = getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType);
-      } else {
+        formatRG = getSupportedFormat(
+          gl,
+          webGL2Context.RG16F,
+          webGL2Context.RG,
+          halfFloatTexType
+        );
+        formatR = getSupportedFormat(
+          gl,
+          webGL2Context.R16F,
+          webGL2Context.RED,
+          halfFloatTexType
+        );
+      } else if (gl) {
         formatRGBA = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
         formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
         formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
       }
 
       return {
-        gl,
+        gl: gl as WebGLRenderingContext,
         ext: {
           formatRGBA,
           formatRG,
           formatR,
           halfFloatTexType,
           supportLinearFiltering,
-        },
+        } as WebGLExtensions,
       };
     }
 
-    function getSupportedFormat(gl: WebGLRenderingContext | WebGL2RenderingContext, internalFormat: number, format: number, type: number) {
+    function getSupportedFormat(gl: WebGLRenderingContext | WebGL2RenderingContext, internalFormat: number, format: number, type: number | null) {
       if (!supportRenderTextureFormat(gl, internalFormat, format, type)) {
-        switch (internalFormat) {
-          case gl.R16F:
+        if (isWebGL2(gl)) {
+          if (internalFormat === gl.R16F) {
             return getSupportedFormat(gl, gl.RG16F, gl.RG, type);
-          case gl.RG16F:
+          }
+          if (internalFormat === gl.RG16F) {
             return getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, type);
-          default:
-            return null;
+          }
         }
+        return null;
       }
       return {
         internalFormat,
@@ -161,7 +192,9 @@ function SplashCursor({
       };
     }
 
-    function supportRenderTextureFormat(gl: WebGLRenderingContext | WebGL2RenderingContext, internalFormat: number, format: number, type: number) {
+    function supportRenderTextureFormat(gl: WebGLRenderingContext | WebGL2RenderingContext, internalFormat: number, format: number, type: number | null) {
+      if (!type) return false;
+      
       const texture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
