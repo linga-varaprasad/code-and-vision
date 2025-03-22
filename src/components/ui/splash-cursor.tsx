@@ -1,3 +1,4 @@
+
 "use client";
 import { useEffect, useRef } from "react";
 
@@ -902,4 +903,436 @@ function SplashCursor({
       let height = scaleByPixelRatio(canvas.clientHeight);
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
-        canvas.height
+        canvas.height = height;
+        return true;
+      }
+      return false;
+    }
+
+    function hashCode(s: string) {
+      if (s.length === 0) return 0;
+      let hash = 0;
+      for (let i = 0; i < s.length; i++) {
+        hash = (hash << 5) - hash + s.charCodeAt(i);
+        hash |= 0; // Convert to 32bit integer
+      }
+      return hash;
+    }
+
+    function getResolution(resolution: number) {
+      let aspectRatio = canvas.width / canvas.height;
+      if (aspectRatio < 1) aspectRatio = 1.0 / aspectRatio;
+
+      let min = Math.round(resolution);
+      let max = Math.round(resolution * aspectRatio);
+
+      if (canvas.width > canvas.height) return { width: max, height: min };
+      else return { width: min, height: max };
+    }
+
+    function scaleByPixelRatio(input: number) {
+      let pixelRatio = window.devicePixelRatio || 1;
+      return Math.floor(input * pixelRatio);
+    }
+    
+    function updateColors(dt: number) {
+      if (!config.COLORFUL) return;
+
+      colorUpdateTimer += dt * config.COLOR_UPDATE_SPEED;
+      if (colorUpdateTimer >= 1) {
+        colorUpdateTimer = wrap(colorUpdateTimer, 0, 1);
+        pointers.forEach((p) => {
+          p.color = generateColor();
+        });
+      }
+    }
+
+    function applyInputs() {
+      if (pointers.length > 0) {
+        if (pointers[0].moved) {
+          pointers[0].moved = false;
+          splatPointer(pointers[0]);
+        }
+      }
+    }
+
+    function step(dt: number) {
+      gl.disable(gl.BLEND);
+      gl.viewport(0, 0, velocity.width, velocity.height);
+
+      curlProgram.bind();
+      gl.uniform2f(
+        curlProgram.uniforms.texelSize,
+        velocity.texelSizeX,
+        velocity.texelSizeY
+      );
+      gl.uniform1i(curlProgram.uniforms.uVelocity, velocity.read.attach(0));
+      blit(curl);
+
+      vorticityProgram.bind();
+      gl.uniform2f(
+        vorticityProgram.uniforms.texelSize,
+        velocity.texelSizeX,
+        velocity.texelSizeY
+      );
+      gl.uniform1i(vorticityProgram.uniforms.uVelocity, velocity.read.attach(0));
+      gl.uniform1i(vorticityProgram.uniforms.uCurl, curl.attach(1));
+      gl.uniform1f(vorticityProgram.uniforms.curl, config.CURL);
+      gl.uniform1f(vorticityProgram.uniforms.dt, dt);
+      blit(velocity.write);
+      velocity.swap();
+
+      divergenceProgram.bind();
+      gl.uniform2f(
+        divergenceProgram.uniforms.texelSize,
+        velocity.texelSizeX,
+        velocity.texelSizeY
+      );
+      gl.uniform1i(divergenceProgram.uniforms.uVelocity, velocity.read.attach(0));
+      blit(divergence);
+
+      clearProgram.bind();
+      gl.uniform1i(clearProgram.uniforms.uTexture, pressure.read.attach(0));
+      gl.uniform1f(clearProgram.uniforms.value, config.PRESSURE);
+      blit(pressure.write);
+      pressure.swap();
+
+      pressureProgram.bind();
+      gl.uniform2f(
+        pressureProgram.uniforms.texelSize,
+        velocity.texelSizeX,
+        velocity.texelSizeY
+      );
+      gl.uniform1i(pressureProgram.uniforms.uDivergence, divergence.attach(0));
+      for (let i = 0; i < config.PRESSURE_ITERATIONS; i++) {
+        gl.uniform1i(pressureProgram.uniforms.uPressure, pressure.read.attach(1));
+        blit(pressure.write);
+        pressure.swap();
+      }
+
+      gradienSubtractProgram.bind();
+      gl.uniform2f(
+        gradienSubtractProgram.uniforms.texelSize,
+        velocity.texelSizeX,
+        velocity.texelSizeY
+      );
+      gl.uniform1i(
+        gradienSubtractProgram.uniforms.uPressure,
+        pressure.read.attach(0)
+      );
+      gl.uniform1i(
+        gradienSubtractProgram.uniforms.uVelocity,
+        velocity.read.attach(1)
+      );
+      blit(velocity.write);
+      velocity.swap();
+
+      advectionProgram.bind();
+      gl.uniform2f(
+        advectionProgram.uniforms.texelSize,
+        velocity.texelSizeX,
+        velocity.texelSizeY
+      );
+      if (!ext.supportLinearFiltering)
+        gl.uniform2f(
+          advectionProgram.uniforms.dyeTexelSize,
+          velocity.texelSizeX,
+          velocity.texelSizeY
+        );
+      let velocityId = velocity.read.attach(0);
+      gl.uniform1i(advectionProgram.uniforms.uVelocity, velocityId);
+      gl.uniform1i(advectionProgram.uniforms.uSource, velocityId);
+      gl.uniform1f(advectionProgram.uniforms.dt, dt);
+      gl.uniform1f(
+        advectionProgram.uniforms.dissipation,
+        config.VELOCITY_DISSIPATION
+      );
+      blit(velocity.write);
+      velocity.swap();
+
+      if (!ext.supportLinearFiltering)
+        gl.uniform2f(
+          advectionProgram.uniforms.dyeTexelSize,
+          dye.texelSizeX,
+          dye.texelSizeY
+        );
+      gl.uniform1i(advectionProgram.uniforms.uVelocity, velocity.read.attach(0));
+      gl.uniform1i(advectionProgram.uniforms.uSource, dye.read.attach(1));
+      gl.uniform1f(
+        advectionProgram.uniforms.dissipation,
+        config.DENSITY_DISSIPATION
+      );
+      blit(dye.write);
+      dye.swap();
+    }
+
+    function render(target: any) {
+      if (config.TRANSPARENT) {
+        gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+        gl.enable(gl.BLEND);
+      } else {
+        gl.disable(gl.BLEND);
+      }
+
+      if (!config.TRANSPARENT) {
+        drawColor(target, normalizeColor(config.BACK_COLOR));
+      }
+
+      drawDisplay(target);
+    }
+
+    function normalizeColor(input: { r: number; g: number; b: number }) {
+      let output = {
+        r: input.r / 255,
+        g: input.g / 255,
+        b: input.b / 255,
+      };
+      return output;
+    }
+
+    function wrap(value: number, min: number, max: number) {
+      let range = max - min;
+      if (range === 0) return min;
+      return ((value - min) % range) + min;
+    }
+
+    function getTextureScale(texture: any, width: number, height: number) {
+      return {
+        x: width / texture.width,
+        y: height / texture.height,
+      };
+    }
+
+    function drawDisplay(target: any) {
+      let width = target == null ? gl.drawingBufferWidth : target.width;
+      let height = target == null ? gl.drawingBufferHeight : target.height;
+
+      displayMaterial.bind();
+      gl.uniform1i(displayMaterial.uniforms.uTexture, dye.read.attach(0));
+      gl.uniform1f(displayMaterial.uniforms.opacity, 1.0);
+      gl.viewport(0, 0, width, height);
+      blit(target);
+    }
+
+    function drawColor(target: any, color: { r: number; g: number; b: number }) {
+      colorProgram.bind();
+
+      gl.uniform4f(
+        colorProgram.uniforms.color,
+        color.r,
+        color.g,
+        color.b,
+        1
+      );
+      gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+      blit(target);
+    }
+
+    function splatPointer(pointer: any) {
+      let dx = pointer.deltaX * config.SPLAT_FORCE;
+      let dy = pointer.deltaY * config.SPLAT_FORCE;
+
+      splat(pointer.texcoordX, pointer.texcoordY, dx, dy, pointer.color);
+    }
+
+    function generateColor() {
+      let c = HSVtoRGB(Math.random(), 1.0, 1.0);
+      c.r *= 0.15;
+      c.g *= 0.15;
+      c.b *= 0.15;
+      return c;
+    }
+
+    function HSVtoRGB(h: number, s: number, v: number) {
+      let r = 0, g = 0, b = 0;
+      let i = Math.floor(h * 6);
+      let f = h * 6 - i;
+      let p = v * (1 - s);
+      let q = v * (1 - f * s);
+      let t = v * (1 - (1 - f) * s);
+
+      switch (i % 6) {
+        case 0:
+          r = v;
+          g = t;
+          b = p;
+          break;
+        case 1:
+          r = q;
+          g = v;
+          b = p;
+          break;
+        case 2:
+          r = p;
+          g = v;
+          b = t;
+          break;
+        case 3:
+          r = p;
+          g = q;
+          b = v;
+          break;
+        case 4:
+          r = t;
+          g = p;
+          b = v;
+          break;
+        case 5:
+          r = v;
+          g = p;
+          b = q;
+          break;
+      }
+
+      return {
+        r,
+        g,
+        b,
+      };
+    }
+
+    function splat(x: number, y: number, dx: number, dy: number, color: any) {
+      gl.viewport(0, 0, velocity.width, velocity.height);
+      splatProgram.bind();
+      gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
+      gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+      gl.uniform2f(splatProgram.uniforms.point, x, y);
+      gl.uniform3f(splatProgram.uniforms.color, dx, dy, 0.0);
+      gl.uniform1f(
+        splatProgram.uniforms.radius,
+        correctRadius(config.SPLAT_RADIUS / 100.0)
+      );
+      blit(velocity.write);
+      velocity.swap();
+
+      gl.viewport(0, 0, dye.width, dye.height);
+      gl.uniform1i(splatProgram.uniforms.uTarget, dye.read.attach(0));
+      gl.uniform3f(splatProgram.uniforms.color, color.r, color.g, color.b);
+      blit(dye.write);
+      dye.swap();
+    }
+
+    function correctRadius(radius: number) {
+      let aspectRatio = canvas.width / canvas.height;
+      if (aspectRatio > 1) radius *= aspectRatio;
+      return radius;
+    }
+
+    // Initialization
+    const colorProgram = new Program(baseVertexShader, copyShader);
+    config.COLORFUL = false; // Initialize COLORFUL property
+    
+    canvas.addEventListener("mousedown", (e) => {
+      let posX = scaleByPixelRatio(e.offsetX);
+      let posY = scaleByPixelRatio(e.offsetY);
+      updatePointerDownData(pointers[0], posX, posY);
+    });
+
+    canvas.addEventListener("mousemove", (e) => {
+      let posX = scaleByPixelRatio(e.offsetX);
+      let posY = scaleByPixelRatio(e.offsetY);
+      updatePointerMoveData(pointers[0], posX, posY);
+    });
+
+    canvas.addEventListener("mouseup", () => {
+      updatePointerUpData(pointers[0]);
+    });
+
+    canvas.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      const touches = e.targetTouches;
+      for (let i = 0; i < touches.length; i++) {
+        if (i >= pointers.length) {
+          // @ts-ignore - using constructor function pattern
+          pointers.push(new pointerPrototype());
+        }
+        
+        let posX = scaleByPixelRatio(touches[i].pageX);
+        let posY = scaleByPixelRatio(touches[i].pageY);
+        updatePointerDownData(pointers[i], posX, posY);
+      }
+    });
+
+    canvas.addEventListener("touchmove", (e) => {
+      e.preventDefault();
+      const touches = e.targetTouches;
+      for (let i = 0; i < touches.length; i++) {
+        let posX = scaleByPixelRatio(touches[i].pageX);
+        let posY = scaleByPixelRatio(touches[i].pageY);
+        updatePointerMoveData(pointers[i], posX, posY);
+      }
+    });
+
+    canvas.addEventListener("touchend", (e) => {
+      const touches = e.changedTouches;
+      for (let i = 0; i < touches.length; i++) {
+        let pointer = pointers.find(p => p.id === touches[i].identifier);
+        if (pointer) updatePointerUpData(pointer);
+      }
+    });
+
+    function updatePointerDownData(pointer: any, posX: number, posY: number) {
+      pointer.id = -1;
+      pointer.down = true;
+      pointer.moved = false;
+      pointer.texcoordX = posX / canvas.width;
+      pointer.texcoordY = 1.0 - posY / canvas.height;
+      pointer.prevTexcoordX = pointer.texcoordX;
+      pointer.prevTexcoordY = pointer.texcoordY;
+      pointer.deltaX = 0;
+      pointer.deltaY = 0;
+      pointer.color = generateColor();
+    }
+
+    function updatePointerMoveData(pointer: any, posX: number, posY: number) {
+      if (!pointer.down) return;
+      
+      pointer.moved = true;
+      pointer.prevTexcoordX = pointer.texcoordX;
+      pointer.prevTexcoordY = pointer.texcoordY;
+      pointer.texcoordX = posX / canvas.width;
+      pointer.texcoordY = 1.0 - posY / canvas.height;
+      pointer.deltaX = correctDeltaX(pointer.texcoordX - pointer.prevTexcoordX);
+      pointer.deltaY = correctDeltaY(pointer.texcoordY - pointer.prevTexcoordY);
+    }
+
+    function updatePointerUpData(pointer: any) {
+      pointer.down = false;
+    }
+
+    function correctDeltaX(delta: number) {
+      let aspectRatio = canvas.width / canvas.height;
+      if (aspectRatio < 1) delta *= aspectRatio;
+      return delta;
+    }
+
+    function correctDeltaY(delta: number) {
+      let aspectRatio = canvas.width / canvas.height;
+      if (aspectRatio > 1) delta /= aspectRatio;
+      return delta;
+    }
+
+    // Start the animation
+    updateFrame();
+
+    return () => {
+      // Cleanup
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        top: 0,
+        left: 0,
+        zIndex: 0,
+      }}
+    />
+  );
+}
+
+export default SplashCursor;
