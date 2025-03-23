@@ -19,13 +19,21 @@ const Index = () => {
       {/* Hero Section */}
       <section id="hero" className="min-h-screen flex items-center justify-center pt-20">
         <div className="container-custom">
-          <div className="glass rounded-3xl p-8 md:p-12 max-w-5xl mx-auto">
+          <div 
+            className="glass rounded-3xl p-8 md:p-12 max-w-5xl mx-auto"
+            style={{
+              backgroundImage: "url('/lovable-uploads/487716e6-dfe3-48a4-9019-a2bb4d569ae2.png')",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat"
+            }}
+          >
             <div className="text-center mb-8">
               <div className="animate-fade-in" style={{animationDelay: '0.3s'}}>
-                <h1 className="heading-primary mb-4">
+                <h1 className="heading-primary mb-4 text-shadow-lg">
                   Mangali Linga Vara Prasad
                 </h1>
-                <p className="text-lg md:text-xl opacity-80 max-w-2xl mx-auto animate-fade-in" style={{animationDelay: '0.6s'}}>
+                <p className="text-lg md:text-xl opacity-80 max-w-2xl mx-auto animate-fade-in text-shadow-sm" style={{animationDelay: '0.6s'}}>
                   Full Stack Developer, AI Enthusiast, and Blockchain Explorer
                 </p>
               </div>
@@ -33,7 +41,7 @@ const Index = () => {
             
             <div className="flex justify-center mt-12 animate-fade-in" style={{animationDelay: '0.9s'}}>
               <Link to="#about" className="flex flex-col items-center opacity-80 hover:opacity-100 transition-opacity duration-300">
-                <span className="mb-2">Scroll Down</span>
+                <span className="mb-2 text-shadow-sm">Scroll Down</span>
                 <ArrowDown className="animate-bounce" />
               </Link>
             </div>
