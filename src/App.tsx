@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,14 +7,18 @@ import Index from "./pages/Index";
 import About from "./pages/About";
 import Projects from "./pages/Projects";
 import Skills from "./pages/Skills";
-import Blog from "./pages/Blog";
+import Certifications from "./pages/Certifications";
+import Internships from "./pages/Internships";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
+import SplashCursor from './components/ui/SplashCursor';
 
 const queryClient = new QueryClient();
 
 const App = () => (
+  
   <QueryClientProvider client={queryClient}>
+    <SplashCursor />
     <TooltipProvider>
       <Toaster />
       <Sonner />
@@ -25,7 +28,8 @@ const App = () => (
           <Route path="/about" element={<About />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/skills" element={<Skills />} />
-          <Route path="/blog" element={<Blog />} />
+          <Route path="/certifications" element={<Certifications />} />
+          <Route path="/internships" element={<Internships />} />
           <Route path="/contact" element={<Contact />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

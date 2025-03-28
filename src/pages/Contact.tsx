@@ -27,10 +27,10 @@ const Contact = () => {
                     <div>
                       <h4 className="font-bold mb-1">Email</h4>
                       <a 
-                        href="mailto:your-email@example.com" 
+                        href="mailto:lingavaraprasad8033@gmail.com" 
                         className="hover:text-accent transition-colors duration-300"
                       >
-                        your-email@example.com
+                        lingavaraprasad8033@gmail.com
                       </a>
                     </div>
                   </div>
@@ -52,7 +52,7 @@ const Contact = () => {
                     <MapPin className="mr-4 text-accent flex-shrink-0" />
                     <div>
                       <h4 className="font-bold mb-1">Location</h4>
-                      <p>India</p>
+                      <p>Kurnool, Andhra Pradesh</p>
                     </div>
                   </div>
                   
@@ -61,12 +61,12 @@ const Contact = () => {
                     <div>
                       <h4 className="font-bold mb-1">LinkedIn</h4>
                       <a 
-                        href="https://linkedin.com/in/mangali-linga-vara-prasad" 
+                        href="https://linkedin.com/in/linga-vara-prasad-mangali-b8b117245" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="hover:text-accent transition-colors duration-300"
                       >
-                        linkedin.com/in/mangali-linga-vara-prasad
+                        linkedin.com/in/linga-vara-prasad-mangali-b8b117245
                       </a>
                     </div>
                   </div>
@@ -76,12 +76,12 @@ const Contact = () => {
                     <div>
                       <h4 className="font-bold mb-1">GitHub</h4>
                       <a 
-                        href="https://github.com/your-github" 
+                        href="https://github.com/linga-varaprasad" 
                         target="_blank" 
                         rel="noopener noreferrer"
                         className="hover:text-accent transition-colors duration-300"
                       >
-                        github.com/your-github
+                        github.com/linga-varaprasad
                       </a>
                     </div>
                   </div>

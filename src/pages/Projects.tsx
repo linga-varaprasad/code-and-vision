@@ -18,46 +18,32 @@ const Projects = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <ProjectCard 
-              title="ShareApp"
-              description="A platform for sharing real-life stories and reviews with a focus on community engagement and user experience."
-              technologies={["React.js", "Django", "PostgreSQL"]}
+              title="Fitplano AI Website"
+              description="Developed an AI-based fitness plan generator using React.js and AWS for hosting and scaling. Integrated real-time personalized recommendations for enhanced user experience."
+              technologies={["React.js"]}
               delay={1}
             />
             
             <ProjectCard 
-              title="VoisePay"
-              description="A secure voice-based AI payment system supporting Indian regional languages for improved accessibility."
-              technologies={["Python", "TensorFlow", "Node.js", "Express"]}
+              title="Data Poisoning Detection Tool"
+              description="Designed and built a Python-based AI security tool to prevent data poisoning attacks in machine learning models. Used Streamlit for continuous dataset monitoring, anomaly detection, and visualization."
+              technologies={["Python", "Streamlit"]}
               delay={2}
             />
             
             <ProjectCard 
-              title="FitPlanoAI"
-              description="AI-generated fitness and diet plans with chatbot support to help users maintain their health goals."
-              technologies={["React.js", "OpenAI", "MongoDB", "Express"]}
+              title="AI-powered Healthcare Chatbot"
+              description="Developed a chatbot using Groq AI to provide real-time, empathetic healthcare assistance. Built an interactive UI with Streamlit and implemented features like health tips and emergency contacts."
+              technologies={["Groq AI", "Streamlit", "Healthcare"]}
               delay={3}
             />
             
-            <ProjectCard 
-              title="AI Prompt Generator"
-              description="A tool to create optimized AI prompts for various applications and use cases."
-              technologies={["TypeScript", "Next.js", "Tailwind CSS"]}
+            {/* <ProjectCard 
+              title="FitPlanoAI"
+              description="AI-generated fitness and diet plans with chatbot support to help users maintain their health goals."
+              technologies={["React.js", "OpenAI", "MongoDB", "Express"]}
               delay={4}
-            />
-            
-            <ProjectCard 
-              title="E-Commerce Dashboard"
-              description="An admin dashboard for managing products, orders, and customers for an e-commerce platform."
-              technologies={["React.js", "Redux", "Material UI", "Firebase"]}
-              delay={5}
-            />
-            
-            <ProjectCard 
-              title="Blockchain Voting System"
-              description="A secure voting system built on blockchain technology to ensure transparency and immutability."
-              technologies={["Solidity", "Ethereum", "Web3.js", "React"]}
-              delay={6}
-            />
+            /> */}
           </div>
         </div>
       </section>

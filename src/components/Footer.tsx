@@ -40,18 +40,18 @@ const Footer = () => {
             <div className="flex flex-col items-center md:items-end">
               <h3 className="font-jacques text-xl mb-4">Connect</h3>
               <div className="flex space-x-4">
-                <a href="https://github.com/your-github" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors duration-300" aria-label="GitHub">
+                <a href="https://github.com/linga-varaprasad" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors duration-300" aria-label="GitHub">
                   <Github size={20} />
                 </a>
                 <a href="https://linkedin.com/in/mangali-linga-vara-prasad" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors duration-300" aria-label="LinkedIn">
                   <Linkedin size={20} />
                 </a>
-                <a href="mailto:your-email@example.com" className="hover:text-accent transition-colors duration-300" aria-label="Email">
+                <a href="mailto:lingavaraprasad8033@gmail.com" className="hover:text-accent transition-colors duration-300" aria-label="Email">
                   <Mail size={20} />
                 </a>
-                <a href="tel:+91XXXXXXXXXX" className="hover:text-accent transition-colors duration-300" aria-label="Phone">
+                {/* <a href="tel:+91XXXXXXXXXX" className="hover:text-accent transition-colors duration-300" aria-label="Phone">
                   <Phone size={20} />
-                </a>
+                </a> */}
               </div>
             </div>
           </div>

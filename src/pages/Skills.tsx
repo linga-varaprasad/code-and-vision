@@ -19,43 +19,43 @@ const Skills = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <SkillCard 
-              title="Frontend"
-              skills={["React.js", "Vite", "Bootstrap", "Tailwind CSS", "HTML5", "CSS3", "JavaScript", "TypeScript"]}
+              title="Programming Languages"
+              skills={["Python", "SQL"]}
               icon={<Code size={24} />}
               delay={1}
             />
             
             <SkillCard 
-              title="Backend"
-              skills={["Django", "Node.js", "Express", "RESTful APIs", "GraphQL", "FastAPI", "Python", "JavaScript"]}
+              title="Web Technologies"
+              skills={["HTML", "CSS", "JavaScript", "React.js"]}
               icon={<Server size={24} />}
               delay={2}
             />
             
             <SkillCard 
-              title="Databases"
-              skills={["PostgreSQL", "MongoDB", "MySQL", "SQLite", "Redis", "Firebase"]}
+              title="Frameworks"
+              skills={["Django", "React.js"]}
               icon={<Database size={24} />}
               delay={3}
             />
             
             <SkillCard 
-              title="AI & ML"
-              skills={["Chatbots", "NLP", "Prompt Engineering", "TensorFlow", "PyTorch", "OpenAI API", "Hugging Face"]}
+              title="Cloud Technologies"
+              skills={["AWS (EC2, RDS, Lambda)"]}
               icon={<Lightbulb size={24} />}
               delay={4}
             />
             
             <SkillCard 
-              title="Blockchain"
-              skills={["Smart Contracts", "Web3.js", "Ethereum", "Solidity", "MetaMask Integration", "NFTs"]}
+              title="Databases"
+              skills={["MySQL","PostgreSQL","SupaBase"]}
               icon={<Braces size={24} />}
               delay={5}
             />
             
             <SkillCard 
-              title="DevOps"
-              skills={["Docker", "Git", "CI/CD", "AWS", "Vercel", "Netlify", "Testing", "Debugging"]}
+              title="AI & Machine Learning"
+              skills={["Generative AI", "Data Analysis", "AI Security", "Version Control: Git, GitHub"]}
               icon={<BarChart size={24} />}
               delay={6}
             />

@@ -5,6 +5,11 @@
 html {
   scroll-behavior: smooth;
 }
+  body {
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
 
 /* Glass effect styling */
 .glass-card {

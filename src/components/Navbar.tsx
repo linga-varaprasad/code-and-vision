@@ -30,16 +30,17 @@ const Navbar = () => {
     { name: "About", path: "/about" },
     { name: "Projects", path: "/projects" },
     { name: "Skills", path: "/skills" },
-    { name: "Blog", path: "/blog" },
+    { name: "Certifications", path: "/certifications" },
+    { name: "Internships", path: "/internships" },
     { name: "Contact", path: "/contact" },
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled ? "bg-white/10 backdrop-blur-lg shadow-md" : "bg-transparent"
+    <nav className={`fixed top-0 left-0 right-0 transition-all duration-300 z-50 ${
+      scrolled ? "bg-white/80 backdrop-blur-lg" : "bg-transparent"
     }`}>
-      <div className="container-custom py-4">
-        <div className="flex items-center justify-between">
+      <div className="container-custom py-4 px-6 mx-auto max-w-5xl">
+        <div className="flex items-center justify-between bg-white/5 backdrop-blur-md rounded-full px-6 py-2 shadow-lg">
           {/* Logo */}
           <Link 
             to="/" 
@@ -51,11 +52,11 @@ const Navbar = () => {
               alt="Colorful Bird Logo" 
               className="h-10 w-auto logo-animation animate-float" 
             />
-            <span className="font-jacques text-xl sm:text-2xl tracking-wider">Prasad</span>
+            <span className="font-jacques text-xl sm:text-2xl tracking-wider">VaraPrasad</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-12">
             {navLinks.map((link) => (
               <Link
                 key={link.name}

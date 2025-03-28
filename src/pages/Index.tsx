@@ -17,7 +17,7 @@ const Index = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section id="hero" className="min-h-screen flex items-center justify-center pt-20">
+      <section id="hero" className="min-h-screen flex items-center justify-center pt-20" >
         <div className="container-custom">
           <div 
             className="glass rounded-3xl p-8 md:p-12 max-w-5xl mx-auto"
@@ -28,13 +28,23 @@ const Index = () => {
               backgroundRepeat: "no-repeat"
             }}
           >
+
+          <div className="rounded-3xl p-8 md:p-12 max-w-5xl mx-auto" style={{backgroundImage: "url('/src/assets/background.webp')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat"}}>
             <div className="text-center mb-8">
               <div className="animate-fade-in" style={{animationDelay: '0.3s'}}>
                 <h1 className="heading-primary mb-4 text-shadow-lg">
                   Mangali Linga Vara Prasad
                 </h1>
+
                 <p className="text-lg md:text-xl opacity-80 max-w-2xl mx-auto animate-fade-in text-shadow-sm" style={{animationDelay: '0.6s'}}>
                   Full Stack Developer, AI Enthusiast, and Blockchain Explorer
+
+                <p className="text-lg md:text-xl opacity-80 max-w-2xl mx-auto animate-fade-in" style={{animationDelay: '0.6s'}}>
+                  Software Developer, AI Tools , Prompt Engineering , AI Project Development , Continuous Learning in AI
+                </p>
+                <p className="mt-4 max-w-2xl mx-auto animate-fade-in" style={{animationDelay: '0.8s'}}>
+                  Hi, I'm Mangali Linga Vara Prasad, a passionate Software Developer with expertise in AI, Machine Learning, and Full-Stack Development. I love building smart applications and scalable web solutions Explore my projects and skills to learn more about my work!
+
                 </p>
               </div>
             </div>
@@ -59,13 +69,13 @@ const Index = () => {
           
           <div className="glass rounded-3xl p-8 md:p-12 max-w-5xl mx-auto animate-fade-in-up">
             <p className="mb-6 leading-relaxed">
-              I am a skilled <strong>Full Stack Developer</strong> with expertise in <strong>React.js, Django, MongoDB, PostgreSQL, and AI-driven applications</strong>. I have worked on projects like <strong>ShareApp</strong> (a story-sharing platform), a voice-based AI payment system, and AI-powered chatbots.
+              I am a B.Tech graduate in Computer Science and Engineering from Rayalaseema University College of Engineering with a CGPA of 8.02. I am deeply passionate about technology, AI innovation, and problem-solving.
             </p>
             <p className="mb-6 leading-relaxed">
-              My goal is to build impactful tech solutions that solve real-world problems. I'm passionate about creating clean, efficient code and designing intuitive user experiences that make complex technologies accessible to everyone.
+              I have experience working with <strong>Python, Django, React.js, SQL,Knowledge on AWS Concepts</strong> and have built several AI-driven projects. My goal is to continuously learn and contribute to cutting-edge technological solutions.
             </p>
             <p className="leading-relaxed">
-              When I'm not coding, I'm exploring new technologies, contributing to open-source projects, or sharing my knowledge through blogs and tutorials.
+              I'm particularly interested in artificial intelligence and its applications in everyday technology. My work often involves integrating AI services with web applications to create smarter, more intuitive user experiences.
             </p>
             
             <div className="mt-8 flex flex-wrap justify-center gap-4">
@@ -86,32 +96,26 @@ const Index = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <ProjectCard 
-              title="ShareApp"
-              description="A platform for sharing real-life stories and reviews with a focus on community engagement and user experience."
-              technologies={["React.js", "Django", "PostgreSQL"]}
+              title="Fitplano AI Website"
+              description="Developed an AI-based fitness plan generator using React.js. Integrated real-time personalized recommendations for enhanced user experience."
+              technologies={["React.js", "AI Integration"]}
               delay={1}
             />
             
             <ProjectCard 
-              title="VoisePay"
-              description="A secure voice-based AI payment system supporting Indian regional languages for improved accessibility."
-              technologies={["Python", "TensorFlow", "Node.js", "Express"]}
+              title="Data Poisoning Detection Tool"
+              description="Designed and built a Python-based AI security tool to prevent data poisoning attacks in machine learning models. Used Streamlit for continuous dataset monitoring, anomaly detection, and visualization."
+              technologies={["Python", "Streamlit"]}
               delay={2}
             />
             
             <ProjectCard 
-              title="FitPlanoAI"
-              description="AI-generated fitness and diet plans with chatbot support to help users maintain their health goals."
-              technologies={["React.js", "OpenAI", "MongoDB", "Express"]}
+              title="AI-powered Healthcare Chatbot"
+              description="Developed a chatbot using Groq AI to provide real-time, empathetic healthcare assistance. Built an interactive UI with Streamlit and implemented features like health tips and emergency contacts."
+              technologies={["Groq AI", "Streamlit", "Healthcare"]}
               delay={3}
             />
-            
-            <ProjectCard 
-              title="AI Prompt Generator"
-              description="A tool to create optimized AI prompts for various applications and use cases."
-              technologies={["TypeScript", "Next.js", "Tailwind CSS"]}
-              delay={4}
-            />
+             
           </div>
           
           <div className="text-center mt-12">
@@ -130,43 +134,43 @@ const Index = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <SkillCard 
-              title="Frontend"
-              skills={["React.js", "Vite", "Bootstrap", "Tailwind CSS"]}
+              title="Programming Languages"
+              skills={["Python", "SQL", "JavaScript", "HTML", "CSS"]}
               icon={<Code size={24} />}
               delay={1}
             />
             
             <SkillCard 
-              title="Backend"
-              skills={["Django", "Node.js", "Express", "RESTful APIs"]}
+              title="Web Technologies"
+              skills={["HTML", "CSS", "JavaScript", "React.js"]}
               icon={<Server size={24} />}
               delay={2}
             />
             
             <SkillCard 
-              title="Databases"
-              skills={["PostgreSQL", "MongoDB", "MySQL", "SQLite"]}
+              title="Frameworks"
+              skills={["Django", "React.js"]}
               icon={<Database size={24} />}
               delay={3}
             />
             
             <SkillCard 
-              title="AI & ML"
-              skills={["Chatbots", "NLP", "Prompt Engineering", "TensorFlow"]}
+              title="Cloud Technologies"
+              skills={["AWS (EC2, RDS, Lambda)"]}
               icon={<Lightbulb size={24} />}
               delay={4}
             />
             
             <SkillCard 
-              title="Blockchain"
-              skills={["Smart Contracts", "Web3.js", "Ethereum", "Solidity"]}
+              title="Databases"
+              skills={["MySQL"]}
               icon={<Braces size={24} />}
               delay={5}
             />
             
             <SkillCard 
-              title="DevOps"
-              skills={["Docker", "Git", "CI/CD", "AWS"]}
+              title="AI & Machine Learning"
+              skills={["Generative AI", "Data Analysis", "AI Security", "Version Control: Git, GitHub"]}
               icon={<BarChart size={24} />}
               delay={6}
             />
@@ -175,7 +179,7 @@ const Index = () => {
       </section>
       
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-20">
+      {/* <section id="testimonials" className="py-20">
         <div className="container-custom">
           <SectionHeading 
             title="Testimonials"
@@ -198,10 +202,10 @@ const Index = () => {
             />
           </div>
         </div>
-      </section>
+      </section> */}
       
       {/* Blog Section */}
-      <section id="blog" className="py-20">
+      {/* <section id="blog" className="py-20">
         <div className="container-custom">
           <SectionHeading 
             title="Blog"
@@ -238,10 +242,10 @@ const Index = () => {
             <Link to="/blog" className="btn-outline">Read All Posts</Link>
           </div>
         </div>
-      </section>
+      </section> */}
       
       {/* Achievements Section */}
-      <section id="achievements" className="py-20">
+      {/* <section id="achievements" className="py-20">
         <div className="container-custom">
           <SectionHeading 
             title="Achievements"
@@ -270,7 +274,7 @@ const Index = () => {
             />
           </div>
         </div>
-      </section>
+      </section> */}
       
       {/* Contact Section */}
       <section id="contact" className="py-20">
